@@ -6,11 +6,19 @@ import Objects.Object;
 import Objects.*;
 import java.awt.Color;
 import java.awt.Font;
+import Animations.*;
 
 public class PLAYING extends States {
-    ArrayList<Object> objects = new ArrayList<>();
-    int[] players = new int[4];
+    private ArrayList<Object> objects = new ArrayList<>();
+    private int[] players = new int[4];
     private int mode = 0;
+    private Distribute distribute = new Distribute();
+    /*
+    Mode 0: Num Players to Bots
+    Mode 1: Distribute Cards
+    Mode 2: Player Picks Rule // Show Player Cards
+    Mode 3: Play
+    */
     private Object selectedObject;
 
     @Override
@@ -63,6 +71,9 @@ public class PLAYING extends States {
                     }
 
                 }
+                break;
+            case 1:
+                distribute.animate(g);
                 break;
             case 2:
                 g.setColor(Color.black);
