@@ -16,4 +16,9 @@ public class Button extends Object{
     public int[] getData() {
         return new int[]{x, y, width, height};
     }
+    @Override
+    public void editToString(String[] edits) {
+        if(edits[1] != null)
+            text = edits[1];
+    }
 }

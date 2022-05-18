@@ -1,3 +1,4 @@
+package Game;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
@@ -14,6 +15,7 @@ public class Start extends JFrame{
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        setFocusable(true);
     }
     public static void main(String[] args) {
         new Start();

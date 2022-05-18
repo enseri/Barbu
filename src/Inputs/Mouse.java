@@ -24,7 +24,7 @@ public class Mouse implements MouseInputListener{
                     yIntercept = true;
             }
             if(xIntercept && yIntercept) {
-                State.currentState.interactionWithObject(tempObjects.get(i));
+                State.currentState.interactionWithObject(tempObjects.get(i), "clicked");
                 break;
             }
         }
