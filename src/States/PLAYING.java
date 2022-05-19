@@ -1,6 +1,9 @@
 package States;
 
 import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+
 import java.awt.Graphics;
 import Objects.Object;
 import Objects.*;
@@ -13,8 +16,10 @@ import Game.Game;
 public class PLAYING extends States {
     private ArrayList<Object> objects = new ArrayList<>();
     private Player[] players = new Player[4];
-    private int mode = 0;
+    private Bot[] bots = new Bot[0];
+    private int mode = 0, currentPlayer = 0;
     private Distribute distribute = new Distribute();
+    private boolean showCards = false;
     /*
      * Mode 0: Num Players to Bots
      * Mode 1: Name Players
@@ -43,7 +48,15 @@ public class PLAYING extends States {
                     }
                     break;
                 case 2:
-
+                    ArrayList<ArrayList<Card>> assortedList = Card.genRandCards();
+                    for(int i = 0; i < 4; i++) {
+                        for(int a = 1; a <= 4; a++) {
+                            if(players.length > i && players[i].getToString()[2].equals(a + ""))
+                                players[i].cards = assortedList.get(a - 1);
+                            if(bots.length > i && players[i].getToString()[1].equals(a + ""))
+                                bots[i].cards = assortedList.get(a - 1);
+                        }
+                    }
                     break;
                 case 3:
                     objects.add(new Button("Pas De Barbu", 50, 50, 100, 150));
@@ -51,6 +64,7 @@ public class PLAYING extends States {
                     objects.add(new Button("Pas De Reine", 350, 50, 100, 150));
                     objects.add(new Button("Pas De Plis", 125, 250, 100, 150));
                     objects.add(new Button("Ratatouille", 275, 250, 100, 150));
+                    objects.add(new Button("Show Cards", 0, 450, 100, 50));
                     break;
             }
         }
@@ -84,13 +98,15 @@ public class PLAYING extends States {
                     g.fillRect(100, 50 + (i * 100), 300, 50);
                 }
                 g.setColor(Color.red);
-;                for (int i = 0; i < objects.size(); i++) {
+                for (int i = 0; i < objects.size(); i++) {
                     Object tempSelectedObject = objects.get(i);
                     int[] data = tempSelectedObject.getData();
                     if (tempSelectedObject.getToString().length > 2) {
-                        Game.drawCenteredString(g, tempSelectedObject.getToString()[1] + tempSelectedObject.getToString()[2],
+                        Game.drawCenteredString(g,
+                                tempSelectedObject.getToString()[1] + tempSelectedObject.getToString()[2],
                                 data[0],
-                                data[1],data[2], data[3], new Font(Font.SERIF, 25, 25));
+                                data[1], data[2], data[3], new Font(Font.SERIF, 25, 25));
+                        players[i - 1] = new Player(null, tempSelectedObject.getToString()[2], i + "");
                     }
                 }
                 g.setColor(Color.black);
@@ -108,14 +124,26 @@ public class PLAYING extends States {
             case 3:
                 g.setColor(Color.black);
                 g.fillRect(450, 450, 50, 50);
+                g.fillRect(0, 450, 100, 50);
+                g.setColor(Color.magenta);
+                Game.drawCenteredString(g, players[currentPlayer].getToString()[1] + " Choosing Rule", 200, 0, 100, 20,
+                        new Font(Font.SERIF, 25, 25));
                 g.setColor(Color.red);
-                Game.drawCenteredString(g, "", 450, 450, 50, 50, new Font(Font.SERIF, 10, 10));
                 Game.drawCenteredString(g, "NEXT", 450, 450, 50, 50, new Font(Font.SERIF, 10, 10));
                 g.fillRect(50, 50, 100, 150);
                 g.fillRect(200, 50, 100, 150);
                 g.fillRect(350, 50, 100, 150);
                 g.fillRect(125, 250, 100, 150);
                 g.fillRect(275, 250, 100, 150);
+                if(showCards) {
+                    int totalWidth = ((players[currentPlayer].cards.size() * 76) / 2) / 2 + 14;
+                    for(int i = 0; i < players[currentPlayer].cards.size(); i++)
+                        g.drawImage(new ImageIcon("src/Images/back.jpg").getImage(), 250 - totalWidth + (38 * i), 350, 76, 150, null);
+                }
+                g.setColor(Color.black);
+                g.fillRect(0, 450, 100, 50);
+                g.setColor(Color.red);
+                Game.drawCenteredString(g, "Show Cards", 0, 450, 100, 50, new Font(Font.SERIF, 15, 15));
                 break;
         }
     }
@@ -129,6 +157,8 @@ public class PLAYING extends States {
     }
 
     public void interactionWithObject(Object object, String action) {
+        if (object != null && object.getToString().length > 1)
+            System.out.println(object.getToString()[1]);
         switch (action) {
             case "clicked":
                 selectedObject = object;
@@ -136,15 +166,24 @@ public class PLAYING extends States {
                     case "Button":
                         switch (object.getToString()[1]) {
                             case "NEXT":
-                                mode++;
-                                selectedObject = null;
-                                objects.clear();
+                                if (!showCards) {
+                                    mode++;
+                                    selectedObject = null;
+                                    objects.clear();
+                                }
+                                break;
+                            case "Show Cards":
+                                if (showCards)
+                                    showCards = false;
+                                else
+                                    showCards = true;
                                 break;
                         }
                         if (object.getToString()[1].length() > 4) {
                             switch (object.getToString()[1].substring(object.getToString()[1].length() - 4)) {
                                 case "Bots":
                                     players = new Player[strToNum(object.getToString()[1].substring(0, 1))];
+                                    bots = new Bot[4 - players.length];
                                     break;
                             }
                         }

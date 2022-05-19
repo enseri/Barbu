@@ -1,7 +1,8 @@
 package Animations;
 
+import java.awt.Font;
 import java.awt.Graphics;
-
+import Game.Game;
 import javax.swing.ImageIcon;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -36,9 +37,13 @@ public class Distribute extends Animation {
         for (int i = 0; i < 52 - drawnCards; i++) {
             g.drawImage(new ImageIcon("src/Images/back.jpg").getImage(), x, y - i, 100, 150, null);
         }
-        if (drawnCards <= 52) {
+        Game.drawCenteredString(g, num0 + "", 200, 150, 100, 20, new Font(Font.SANS_SERIF, 20, 20));
+        Game.drawCenteredString(g, num1 + "", 380, 175, 20, 150, new Font(Font.SANS_SERIF, 20, 20));
+        Game.drawCenteredString(g, num2 + "", 200, 330, 100, 20, new Font(Font.SANS_SERIF, 20, 20));
+        Game.drawCenteredString(g, num3 + "", 100, 175, 20, 150, new Font(Font.SANS_SERIF, 20, 20));
+        if (drawnCards < 52) {
             try{
-                TimeUnit.MILLISECONDS.sleep(10);
+                TimeUnit.MILLISECONDS.sleep(3);
             } catch(InterruptedException e) {
                 System.out.println("Interrupted");
             }

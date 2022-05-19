@@ -50,7 +50,7 @@ public class Game extends JPanel {
 }
 
 class Threads extends Thread {
-    double timePerFrame = 60 / 1000;
+    double timePerFrame = 1000 / 60;
     double lastFrame;
     Game game;
 

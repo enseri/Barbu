@@ -2,20 +2,18 @@ package Objects;
 
 import java.util.ArrayList;
 
-public class Player extends Object{
+public class Bot extends Object{
     public ArrayList<Card> cards = new ArrayList<>();
-    String name;
     String position;
 
-    public Player(ArrayList<Card> cards, String name, String position) {
+    public Bot(ArrayList<Card> cards, String position) {
         this.cards = cards;
-        this.name = name;
         this.position = position;
     }
 
     @Override
     public String[] getToString() {
-        return new String[]{"Player", name, position};
+        return new String[]{"Bot", position};
     }
 
     @Override
@@ -26,8 +24,6 @@ public class Player extends Object{
     @Override
     public void editToString(String[] edits) {
         if (edits[1] != null)
-            name = edits[1];
-        if (edits[2] != null)
-            position = edits[2];
+            position = edits[1];
     }
 }

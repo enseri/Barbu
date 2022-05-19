@@ -1,5 +1,8 @@
 package Objects;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Card extends Object {
     public static Card[] deck = new Card[] {
             new Card("Clover", "Ace", 0, 0, 100, 150),
@@ -85,5 +88,41 @@ public class Card extends Object {
             type = edits[1];
         if (edits[2] != null)
             card = edits[2];
+    }
+
+    public static ArrayList<ArrayList<Card>> genRandCards() {
+        ArrayList<Card> arr1 = new ArrayList<>();
+        ArrayList<Card> arr2 = new ArrayList<>();
+        ArrayList<Card> arr3 = new ArrayList<>();
+        ArrayList<Card> arr4 = new ArrayList<>();
+        ArrayList<Card> excluded = new ArrayList<>();
+        for (int i = 0; i < deck.length; i++) {
+            int randNum = (int) (Math.random() * deck.length);
+            while (excluded.contains(deck[randNum])) {
+                randNum = (int) (Math.random() * deck.length);
+            }
+            boolean added = false;
+            if (arr1.size() < 13 && !added) {
+                added = true;
+                arr1.add(deck[randNum]);
+                excluded.add(deck[randNum]);
+            }
+            if (arr2.size() < 13 && !added) {
+                added = true;
+                arr2.add(deck[randNum]);
+                excluded.add(deck[randNum]);
+            }
+            if (arr3.size() < 13 && !added) {
+                added = true;
+                arr3.add(deck[randNum]);
+                excluded.add(deck[randNum]);
+            }
+            if (arr4.size() < 13 && !added) {
+                added = true;
+                arr4.add(deck[randNum]);
+                excluded.add(deck[randNum]);
+            }
+        }
+        return new ArrayList<ArrayList<Card>>(Arrays.asList(arr1, arr2, arr3, arr4));
     }
 }
