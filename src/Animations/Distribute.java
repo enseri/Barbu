@@ -34,7 +34,7 @@ public class Distribute extends Animation {
                     break;
             }
         }
-        for (int i = 0; i < 52 - drawnCards; i++) {
+        for (int i = 0; i < 51 - drawnCards; i++) {
             g.drawImage(new ImageIcon("src/Images/back.jpg").getImage(), x, y - i, 100, 150, null);
         }
         Game.drawCenteredString(g, num0 + "", 200, 150, 100, 20, new Font(Font.SANS_SERIF, 20, 20));
@@ -43,7 +43,7 @@ public class Distribute extends Animation {
         Game.drawCenteredString(g, num3 + "", 100, 175, 20, 150, new Font(Font.SANS_SERIF, 20, 20));
         if (drawnCards < 52) {
             try{
-                TimeUnit.MILLISECONDS.sleep(3);
+                TimeUnit.MILLISECONDS.sleep(1);
             } catch(InterruptedException e) {
                 System.out.println("Interrupted");
             }

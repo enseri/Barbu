@@ -20,6 +20,7 @@ public class PLAYING extends States {
     private int mode = 0, currentPlayer = 0;
     private Distribute distribute = new Distribute();
     private boolean showCards = false;
+    private String rule = "Pas De Barbu";
     /*
      * Mode 0: Num Players to Bots
      * Mode 1: Name Players
@@ -60,6 +61,7 @@ public class PLAYING extends States {
                     break;
                 case 3:
                     objects.add(new Button("Pas De Barbu", 50, 50, 100, 150));
+                    selectedObject = objects.get(objects.size() - 1);
                     objects.add(new Button("Pas De Coeur", 200, 50, 100, 150));
                     objects.add(new Button("Pas De Reine", 350, 50, 100, 150));
                     objects.add(new Button("Pas De Plis", 125, 250, 100, 150));
@@ -130,12 +132,21 @@ public class PLAYING extends States {
                         new Font(Font.SERIF, 25, 25));
                 g.setColor(Color.red);
                 Game.drawCenteredString(g, "NEXT", 450, 450, 50, 50, new Font(Font.SERIF, 10, 10));
-                g.fillRect(50, 50, 100, 150);
-                g.fillRect(200, 50, 100, 150);
-                g.fillRect(350, 50, 100, 150);
-                g.fillRect(125, 250, 100, 150);
-                g.fillRect(275, 250, 100, 150);
+                for(int i = 1; i < 6; i++) {
+                    int[] data = objects.get(i).getData();
+                    g.setColor(Color.red);
+                    g.fillRect(data[0], data[1], data[2], data[3]);
+                    if(objects.get(i) == selectedObject || objects.get(i).getToString()[1].equals(rule)) {
+                        rule = objects.get(i).getToString()[1];
+                        g.setColor(Color.green);
+                        g.drawRect(data[0] - 1, data[1] - 1, data[2] + 2, data[3] + 2);
+                        g.drawRect(data[0] - 2, data[1] - 2, data[2] + 4, data[3] + 4);
+                        g.drawRect(data[0] - 3, data[1] - 3, data[2] + 6, data[3] + 6);
+                    }
+                }
                 if(showCards) {
+                    g.setColor(new Color(255, 255, 255, 220));
+                    g.fillRect(0, 0, 500, 500);
                     int totalWidth = ((players[currentPlayer].cards.size() * 76) / 2) / 2 + 14;
                     for(int i = 0; i < players[currentPlayer].cards.size(); i++)
                         g.drawImage(new ImageIcon("src/Images/back.jpg").getImage(), 250 - totalWidth + (38 * i), 350, 76, 150, null);
