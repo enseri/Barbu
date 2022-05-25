@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Card extends Object {
+    public static ArrayList<Card> plis = new ArrayList<>();
     public static Card[] deck = new Card[] {
             new Card("Clover", "Ace", 0, 0, 100, 150),
-            new Card("Clover", "One", 0, 0, 100, 150),
             new Card("Clover", "Two", 0, 0, 100, 150),
             new Card("Clover", "Three", 0, 0, 100, 150),
             new Card("Clover", "Four", 0, 0, 100, 150),
@@ -20,7 +20,6 @@ public class Card extends Object {
             new Card("Clover", "Queen", 0, 0, 100, 150),
             new Card("Clover", "King", 0, 0, 100, 150),
             new Card("Spade", "Ace", 0, 0, 100, 150),
-            new Card("Spade", "One", 0, 0, 100, 150),
             new Card("Spade", "Two", 0, 0, 100, 150),
             new Card("Spade", "Three", 0, 0, 100, 150),
             new Card("Spade", "Four", 0, 0, 100, 150),
@@ -34,7 +33,6 @@ public class Card extends Object {
             new Card("Spade", "Queen", 0, 0, 100, 150),
             new Card("Spade", "King", 0, 0, 100, 150),
             new Card("Diamond", "Ace", 0, 0, 100, 150),
-            new Card("Diamond", "One", 0, 0, 100, 150),
             new Card("Diamond", "Two", 0, 0, 100, 150),
             new Card("Diamond", "Three", 0, 0, 100, 150),
             new Card("Diamond", "Four", 0, 0, 100, 150),
@@ -48,7 +46,6 @@ public class Card extends Object {
             new Card("Diamond", "Queen", 0, 0, 100, 150),
             new Card("Diamond", "King", 0, 0, 100, 150),
             new Card("Heart", "Ace", 0, 0, 100, 150),
-            new Card("Heart", "One", 0, 0, 100, 150),
             new Card("Heart", "Two", 0, 0, 100, 150),
             new Card("Heart", "Three", 0, 0, 100, 150),
             new Card("Heart", "Four", 0, 0, 100, 150),
@@ -124,5 +121,17 @@ public class Card extends Object {
             }
         }
         return new ArrayList<ArrayList<Card>>(Arrays.asList(arr1, arr2, arr3, arr4));
+    }
+
+    @Override
+    public void editData(int[] edits) {
+        if (edits[0] != -1)
+            x = edits[0];
+        if (edits[1] != -1)
+            y = edits[1];
+        if (edits[2] != -1)
+            width = edits[2];
+        if (edits[3] != -1)
+            height = edits[3];
     }
 }

@@ -21,4 +21,9 @@ public class Button extends Object{
         if(edits[1] != null)
             text = edits[1];
     }
+    @Override
+    public void editData(int[] edits) {
+        // TODO Auto-generated method stub
+        
+    }
 }

@@ -30,4 +30,10 @@ public class Player extends Object{
         if (edits[2] != null)
             position = edits[2];
     }
+
+    @Override
+    public void editData(int[] edits) {
+        // TODO Auto-generated method stub
+        
+    }
 }

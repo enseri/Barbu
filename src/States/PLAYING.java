@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import java.awt.Graphics;
+import java.io.File;
+
 import Objects.Object;
 import Objects.*;
 import java.awt.Color;
@@ -50,11 +52,11 @@ public class PLAYING extends States {
                     break;
                 case 2:
                     ArrayList<ArrayList<Card>> assortedList = Card.genRandCards();
-                    for(int i = 0; i < 4; i++) {
-                        for(int a = 1; a <= 4; a++) {
-                            if(players.length > i && players[i].getToString()[2].equals(a + ""))
+                    for (int i = 0; i < 4; i++) {
+                        for (int a = 1; a <= 4; a++) {
+                            if (players.length > i && players[i].getToString()[2].equals(a + ""))
                                 players[i].cards = assortedList.get(a - 1);
-                            if(bots.length > i && players[i].getToString()[1].equals(a + ""))
+                            if (bots.length > i && players[i].getToString()[1].equals(a + ""))
                                 bots[i].cards = assortedList.get(a - 1);
                         }
                     }
@@ -67,6 +69,12 @@ public class PLAYING extends States {
                     objects.add(new Button("Pas De Plis", 125, 250, 100, 150));
                     objects.add(new Button("Ratatouille", 275, 250, 100, 150));
                     objects.add(new Button("Show Cards", 0, 450, 100, 50));
+                    break;
+                case 4:
+                    for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
+                        players[currentPlayer].cards.get(i).editData(new int[]{0 + (38 * i), 350, 38, 150});
+                        objects.add(players[currentPlayer].cards.get(i));
+                    }
                     break;
             }
         }
@@ -132,11 +140,11 @@ public class PLAYING extends States {
                         new Font(Font.SERIF, 25, 25));
                 g.setColor(Color.red);
                 Game.drawCenteredString(g, "NEXT", 450, 450, 50, 50, new Font(Font.SERIF, 10, 10));
-                for(int i = 1; i < 6; i++) {
+                for (int i = 1; i < 6; i++) {
                     int[] data = objects.get(i).getData();
                     g.setColor(Color.red);
                     g.fillRect(data[0], data[1], data[2], data[3]);
-                    if(objects.get(i) == selectedObject || objects.get(i).getToString()[1].equals(rule)) {
+                    if (objects.get(i) == selectedObject || objects.get(i).getToString()[1].equals(rule)) {
                         rule = objects.get(i).getToString()[1];
                         g.setColor(Color.green);
                         g.drawRect(data[0] - 1, data[1] - 1, data[2] + 2, data[3] + 2);
@@ -144,17 +152,34 @@ public class PLAYING extends States {
                         g.drawRect(data[0] - 3, data[1] - 3, data[2] + 6, data[3] + 6);
                     }
                 }
-                if(showCards) {
+                if (showCards) {
                     g.setColor(new Color(255, 255, 255, 220));
                     g.fillRect(0, 0, 500, 500);
-                    int totalWidth = ((players[currentPlayer].cards.size() * 76) / 2) / 2 + 14;
-                    for(int i = 0; i < players[currentPlayer].cards.size(); i++)
-                        g.drawImage(new ImageIcon("src/Images/back.jpg").getImage(), 250 - totalWidth + (38 * i), 350, 76, 150, null);
+                    for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
+                        g.drawImage(
+                                new ImageIcon("src/Images/" + players[currentPlayer].cards.get(i).getToString()[1]
+                                        + players[currentPlayer].cards.get(i).getToString()[2] + ".png").getImage(),
+                                0 + (38 * i), 350, 100, 150, null);
+                    }
                 }
                 g.setColor(Color.black);
                 g.fillRect(0, 450, 100, 50);
                 g.setColor(Color.red);
                 Game.drawCenteredString(g, "Show Cards", 0, 450, 100, 50, new Font(Font.SERIF, 15, 15));
+                break;
+            case 4:
+                for (int i = 0; i < Card.plis.size(); i++) {
+                    g.drawImage(
+                            new ImageIcon("src/Images/" + Card.plis.get(i).getToString()[1]
+                                    + Card.plis.get(i).getToString()[2] + ".png").getImage(),
+                            200 + (i * 50), 175, 100, 150, null);
+                }
+                for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
+                    g.drawImage(
+                            new ImageIcon("src/Images/" + players[currentPlayer].cards.get(i).getToString()[1]
+                                    + players[currentPlayer].cards.get(i).getToString()[2] + ".png").getImage(),
+                            0 + (38 * i), 350, 100, 150, null);
+                }
                 break;
         }
     }
@@ -198,6 +223,9 @@ public class PLAYING extends States {
                                     break;
                             }
                         }
+                        break;
+                    case "Card":
+                        Card.plis.add((Card) object);
                         break;
                 }
                 break;

@@ -26,4 +26,10 @@ public class Bot extends Object{
         if (edits[1] != null)
             position = edits[1];
     }
+
+    @Override
+    public void editData(int[] edits) {
+        // TODO Auto-generated method stub
+        
+    }
 }
