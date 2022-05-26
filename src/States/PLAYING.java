@@ -22,7 +22,7 @@ public class PLAYING extends States {
     private Bot[] bots = new Bot[0];
     private int mode = 0, currentPlayer = 0;
     private Distribute distribute = new Distribute();
-    private boolean showCards = false, hasPlayed = false, whiteScreen = false;
+    private boolean showCards = false, showPlis = false, hasPlayed = false, whiteScreen = false;
     private String rule = "Pas De Barbu";
     /*
      * Mode 0: Num Players to Bots
@@ -73,6 +73,7 @@ public class PLAYING extends States {
                     objects.add(new Button("Show Cards", 0, 450, 100, 50));
                     break;
                 case 4:
+                    objects.add(new Button("Show Plis", 400, 0, 100, 50));
                     objects.add(new Button("NEXT", 0, 0, 50, 50));
                     for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
                         players[currentPlayer].cards.get(i).editData(new int[] { 0 + (38 * i), 350, 38, 150 });
@@ -171,10 +172,14 @@ public class PLAYING extends States {
                 Game.drawCenteredString(g, "Show Cards", 0, 450, 100, 50, new Font(Font.SERIF, 15, 15));
                 break;
             case 4:
-                if (!whiteScreen) {
+            Game.drawCenteredString(g, players[currentPlayer].getToString()[1] + "'s Turn", 200, 0, 100, 20,
+                        new Font(Font.SERIF, 25, 25));
+                if (!whiteScreen && !showPlis) {
                     g.setColor(Color.black);
+                    g.fillRect(400, 0, 100, 50);
                     g.fillRect(0, 0, 50, 50);
                     g.setColor(Color.red);
+                    Game.drawCenteredString(g, "Show Plis", 400, 0, 100, 50, new Font(Font.SERIF, 20, 20));
                     Game.drawCenteredString(g, "NEXT", 0, 0, 50, 50, new Font(Font.SERIF, 10, 10));
                     for (int i = 0; i < Card.plis.size(); i++) {
                         g.drawImage(
@@ -188,13 +193,30 @@ public class PLAYING extends States {
                                         + players[currentPlayer].cards.get(i).getToString()[2] + ".png").getImage(),
                                 0 + (38 * i), 350, 100, 150, null);
                     }
-                } else {
+                } else if (!showPlis) {
                     g.setColor(Color.black);
                     g.fillRect(0, 0, 50, 50);
                     g.setColor(Color.red);
                     Game.drawCenteredString(g, "NEXT", 0, 0, 50, 50, new Font(Font.SERIF, 10, 10));
                     Game.drawCenteredString(g, "PASSING TO NEXT PLAYER...", 0, 0, 500, 500,
                             new Font(Font.SERIF, 25, 25));
+                }
+                if (showPlis) {
+                    for (int i = 0; i < players[currentPlayer].plis.size(); i++) {
+                        g.setColor(Color.pink);
+                        g.drawRect(((i % 4) * 125), ((int) (i / 4) * 150), 1, 150);
+                        ArrayList<Card> plis = players[currentPlayer].plis.get(i);
+                        for (int a = 0; a < plis.size(); a++) {
+                            g.drawImage(
+                                    new ImageIcon("src/Images/" + plis.get(a).getToString()[1]
+                                            + plis.get(a).getToString()[2] + ".png").getImage(),
+                                    ((i % 4) * 125) + (a * 25), 0 + ((int) (i / 4) * 150), 100, 150, null);
+                        }
+                    }
+                    g.setColor(Color.black);
+                    g.fillRect(400, 0, 100, 50);
+                    g.setColor(Color.red);
+                    Game.drawCenteredString(g, "Show Plis", 400, 0, 100, 50, new Font(Font.SERIF, 20, 20));
                 }
                 break;
         }
@@ -222,7 +244,7 @@ public class PLAYING extends States {
                                     mode++;
                                     selectedObject = null;
                                     objects.clear();
-                                } else if (mode == 4 && (hasPlayed || whiteScreen)) {
+                                } else if (mode == 4 && (hasPlayed || whiteScreen) && !showPlis) {
                                     if (!whiteScreen) {
                                         whiteScreen = true;
                                         hasPlayed = false;
@@ -231,6 +253,7 @@ public class PLAYING extends States {
                                         else
                                             currentPlayer = 0;
                                         objects.clear();
+                                        objects.add(new Button("Show Plis", 400, 0, 100, 50));
                                         objects.add(new Button("NEXT", 0, 0, 50, 50));
                                         for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
                                             players[currentPlayer].cards.get(i)
@@ -247,6 +270,12 @@ public class PLAYING extends States {
                                     showCards = false;
                                 else
                                     showCards = true;
+                                break;
+                            case "Show Plis":
+                                if (showPlis)
+                                    showPlis = false;
+                                else
+                                    showPlis = true;
                                 break;
                         }
                         if (object.getToString()[1].length() > 4) {
@@ -292,10 +321,33 @@ public class PLAYING extends States {
                             }
                         }
                         if (Card.plis.size() == 4) {
+                            hasPlayed = false;
                             Card highest = Card.plis.get(0);
                             for (int i = 0; i < 4; i++) {
-                                if (compareCards(Card.plis.get(i), highest) > 0)
+                                if (compareCards(Card.plis.get(i), highest) > 0
+                                        && Card.plis.get(0).getToString()[1].equals(Card.plis.get(i).getToString()[1]))
                                     highest = Card.plis.get(i);
+                            }
+                            players[(currentPlayer + Card.plis.indexOf(highest) + 1) % 4].plis.add((ArrayList<Card>)Card.plis.clone());
+                            currentPlayer = (currentPlayer + Card.plis.indexOf(highest)) % 4;
+                            Card.plis.clear();
+                            if (!whiteScreen) {
+                                whiteScreen = true;
+                                hasPlayed = false;
+                                if (currentPlayer < players.length - 1)
+                                    currentPlayer++;
+                                else
+                                    currentPlayer = 0;
+                                objects.clear();
+                                objects.add(new Button("Show Plis", 400, 0, 100, 50));
+                                objects.add(new Button("NEXT", 0, 0, 50, 50));
+                                for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
+                                    players[currentPlayer].cards.get(i)
+                                            .editData(new int[] { 0 + (38 * i), 350, 38, 150 });
+                                    objects.add(players[currentPlayer].cards.get(i));
+                                }
+                            } else {
+                                whiteScreen = false;
                             }
                         }
                         // switch(rule) {
@@ -381,7 +433,7 @@ public class PLAYING extends States {
                 valueOne = 14;
                 break;
         }
-        switch (one.getToString()[2]) {
+        switch (two.getToString()[2]) {
             case "Two":
                 valueTwo = 2;
                 break;
@@ -422,10 +474,10 @@ public class PLAYING extends States {
                 valueTwo = 14;
                 break;
         }
-        if(valueOne > valueTwo) {
+        if (valueOne > valueTwo) {
             return 1;
         }
-        if(valueOne < valueTwo) {
+        if (valueOne < valueTwo) {
             return -1;
         }
         return 0;

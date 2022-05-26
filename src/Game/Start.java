@@ -4,8 +4,9 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 public class Start extends JFrame{
     public Start() {
-        Game game = new Game();
+        Game game = new Game(this);
         setPreferredSize(new Dimension(500, 500));
+        setMinimumSize(new Dimension(500, 500));
         add(game);
         addKeyListener(game.keyboard);
         addMouseListener(game.mouse);

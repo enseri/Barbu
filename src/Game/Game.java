@@ -13,8 +13,9 @@ import java.awt.*;
 public class Game extends JPanel {
     Keyboard keyboard;
     Mouse mouse;
-
-    public Game() {
+    public Start start;
+    public Game(Start start) {
+        this.start = start;
         keyboard = new Keyboard();
         mouse = new Mouse();
         init();
@@ -39,7 +40,6 @@ public class Game extends JPanel {
         Render.render(g);
     }
 
-    // Method Sourced By: Daniel Kvist
     public static void drawCenteredString(Graphics g, String text, int x, int y, int width, int height, Font font) {
         FontMetrics metrics = g.getFontMetrics(font);
         int tempX = x + (width - metrics.stringWidth(text)) / 2;
@@ -63,6 +63,11 @@ class Threads extends Thread {
             if (System.currentTimeMillis() - lastFrame >= timePerFrame) {
                 lastFrame = System.currentTimeMillis();
                 game.repaint();
+                if(game.getHeight() != 500 || game.getWidth() != 500) {
+                    System.out.println(game.getHeight() + " " + game.getWidth()
+                    );
+                    game.start.pack();
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
-## Getting Started
-
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+## Credits
+- Method For Centered Strings by Daniel Kvist
+- Card Images From @geeky_monster `poker deck of cards`
 
 ## Folder Structure
 
