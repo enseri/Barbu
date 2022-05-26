@@ -1,6 +1,7 @@
 package States;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 
@@ -21,7 +22,7 @@ public class PLAYING extends States {
     private Bot[] bots = new Bot[0];
     private int mode = 0, currentPlayer = 0;
     private Distribute distribute = new Distribute();
-    private boolean showCards = false;
+    private boolean showCards = false, hasPlayed = false, whiteScreen = false;
     private String rule = "Pas De Barbu";
     /*
      * Mode 0: Num Players to Bots
@@ -36,7 +37,8 @@ public class PLAYING extends States {
     public void render(Graphics g) {
         g.setColor(Color.magenta);
         if (objects.size() == 0) {
-            objects.add(new Button("NEXT", 450, 450, 50, 50));
+            if (mode != 4)
+                objects.add(new Button("NEXT", 450, 450, 50, 50));
             switch (mode) {
                 case 0:
                     objects.add(new Button("1 Players; 3 Bots", 100, 50, 300, 50));
@@ -71,8 +73,9 @@ public class PLAYING extends States {
                     objects.add(new Button("Show Cards", 0, 450, 100, 50));
                     break;
                 case 4:
+                    objects.add(new Button("NEXT", 0, 0, 50, 50));
                     for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
-                        players[currentPlayer].cards.get(i).editData(new int[]{0 + (38 * i), 350, 38, 150});
+                        players[currentPlayer].cards.get(i).editData(new int[] { 0 + (38 * i), 350, 38, 150 });
                         objects.add(players[currentPlayer].cards.get(i));
                     }
                     break;
@@ -168,17 +171,30 @@ public class PLAYING extends States {
                 Game.drawCenteredString(g, "Show Cards", 0, 450, 100, 50, new Font(Font.SERIF, 15, 15));
                 break;
             case 4:
-                for (int i = 0; i < Card.plis.size(); i++) {
-                    g.drawImage(
-                            new ImageIcon("src/Images/" + Card.plis.get(i).getToString()[1]
-                                    + Card.plis.get(i).getToString()[2] + ".png").getImage(),
-                            200 + (i * 50), 175, 100, 150, null);
-                }
-                for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
-                    g.drawImage(
-                            new ImageIcon("src/Images/" + players[currentPlayer].cards.get(i).getToString()[1]
-                                    + players[currentPlayer].cards.get(i).getToString()[2] + ".png").getImage(),
-                            0 + (38 * i), 350, 100, 150, null);
+                if (!whiteScreen) {
+                    g.setColor(Color.black);
+                    g.fillRect(0, 0, 50, 50);
+                    g.setColor(Color.red);
+                    Game.drawCenteredString(g, "NEXT", 0, 0, 50, 50, new Font(Font.SERIF, 10, 10));
+                    for (int i = 0; i < Card.plis.size(); i++) {
+                        g.drawImage(
+                                new ImageIcon("src/Images/" + Card.plis.get(i).getToString()[1]
+                                        + Card.plis.get(i).getToString()[2] + ".png").getImage(),
+                                200 + (i * 50), 175, 100, 150, null);
+                    }
+                    for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
+                        g.drawImage(
+                                new ImageIcon("src/Images/" + players[currentPlayer].cards.get(i).getToString()[1]
+                                        + players[currentPlayer].cards.get(i).getToString()[2] + ".png").getImage(),
+                                0 + (38 * i), 350, 100, 150, null);
+                    }
+                } else {
+                    g.setColor(Color.black);
+                    g.fillRect(0, 0, 50, 50);
+                    g.setColor(Color.red);
+                    Game.drawCenteredString(g, "NEXT", 0, 0, 50, 50, new Font(Font.SERIF, 10, 10));
+                    Game.drawCenteredString(g, "PASSING TO NEXT PLAYER...", 0, 0, 500, 500,
+                            new Font(Font.SERIF, 25, 25));
                 }
                 break;
         }
@@ -202,10 +218,28 @@ public class PLAYING extends States {
                     case "Button":
                         switch (object.getToString()[1]) {
                             case "NEXT":
-                                if (!showCards) {
+                                if (!showCards && mode != 4) {
                                     mode++;
                                     selectedObject = null;
                                     objects.clear();
+                                } else if (mode == 4 && (hasPlayed || whiteScreen)) {
+                                    if (!whiteScreen) {
+                                        whiteScreen = true;
+                                        hasPlayed = false;
+                                        if (currentPlayer < players.length - 1)
+                                            currentPlayer++;
+                                        else
+                                            currentPlayer = 0;
+                                        objects.clear();
+                                        objects.add(new Button("NEXT", 0, 0, 50, 50));
+                                        for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
+                                            players[currentPlayer].cards.get(i)
+                                                    .editData(new int[] { 0 + (38 * i), 350, 38, 150 });
+                                            objects.add(players[currentPlayer].cards.get(i));
+                                        }
+                                    } else {
+                                        whiteScreen = false;
+                                    }
                                 }
                                 break;
                             case "Show Cards":
@@ -225,7 +259,57 @@ public class PLAYING extends States {
                         }
                         break;
                     case "Card":
-                        Card.plis.add((Card) object);
+                        if (!hasPlayed && Card.plis.size() < 4) {
+                            boolean validCard = false;
+                            if (Card.plis.size() > 0) {
+                                if (((Card) object).getToString()[1]
+                                        .equals(Card.plis.get(0).getToString()[1]))
+                                    validCard = true;
+                                boolean containsType = false;
+                                for (int i = 0; i < players[currentPlayer].cards.size() && !containsType
+                                        && !validCard; i++) {
+                                    if (players[currentPlayer].cards.get(i).getToString()[1]
+                                            .equals(Card.plis.get(0).getToString()[1]))
+                                        containsType = true;
+                                }
+                                if (!validCard && !containsType)
+                                    validCard = true;
+                            } else
+                                validCard = true;
+                            if (validCard) {
+                                Card.plis.add((Card) object);
+                                objects.remove((Card) object);
+                                int cardIndex = players[currentPlayer].cards.indexOf((Card) object);
+                                players[currentPlayer].cards.remove((Card) object);
+                                for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
+                                    if (i >= cardIndex)
+                                        players[currentPlayer].cards.get(i).editData(new int[] {
+                                                players[currentPlayer].cards.get(i).getData()[0] - 38, -1, -1, -1 });
+                                    if (i == players[currentPlayer].cards.size() - 1)
+                                        players[currentPlayer].cards.get(i).editData(new int[] { -1, -1, 100, -1 });
+                                }
+                                hasPlayed = true;
+                            }
+                        }
+                        if (Card.plis.size() == 4) {
+                            Card highest = Card.plis.get(0);
+                            for (int i = 0; i < 4; i++) {
+                                if (compareCards(Card.plis.get(i), highest) > 0)
+                                    highest = Card.plis.get(i);
+                            }
+                        }
+                        // switch(rule) {
+                        // case "Pas De Barbu":
+                        // break;
+                        // case "Pas De Plis":
+                        // break;
+                        // case "Pas De Reine":
+                        // break;
+                        // case "Pas De Coeur":
+                        // break;
+                        // case "Ratatouille":
+                        // break;
+                        // }
                         break;
                 }
                 break;
@@ -252,5 +336,98 @@ public class PLAYING extends States {
         if (x == 1000)
             x = 0;
         return x;
+    }
+
+    private int compareCards(Card one, Card two) {
+        int valueOne = 0, valueTwo = 0;
+        switch (one.getToString()[2]) {
+            case "Two":
+                valueOne = 2;
+                break;
+            case "Three":
+                valueOne = 3;
+                break;
+            case "Four":
+                valueOne = 4;
+                break;
+            case "Five":
+                valueOne = 5;
+                break;
+            case "Six":
+                valueOne = 6;
+                break;
+            case "Seven":
+                valueOne = 7;
+                break;
+            case "Eight":
+                valueOne = 8;
+                break;
+            case "Nine":
+                valueOne = 9;
+                break;
+            case "Ten":
+                valueOne = 10;
+                break;
+            case "Jack":
+                valueOne = 11;
+                break;
+            case "Queen":
+                valueOne = 12;
+                break;
+            case "King":
+                valueOne = 13;
+                break;
+            case "Ace":
+                valueOne = 14;
+                break;
+        }
+        switch (one.getToString()[2]) {
+            case "Two":
+                valueTwo = 2;
+                break;
+            case "Three":
+                valueTwo = 3;
+                break;
+            case "Four":
+                valueTwo = 4;
+                break;
+            case "Five":
+                valueTwo = 5;
+                break;
+            case "Six":
+                valueTwo = 6;
+                break;
+            case "Seven":
+                valueTwo = 7;
+                break;
+            case "Eight":
+                valueTwo = 8;
+                break;
+            case "Nine":
+                valueTwo = 9;
+                break;
+            case "Ten":
+                valueTwo = 10;
+                break;
+            case "Jack":
+                valueTwo = 11;
+                break;
+            case "Queen":
+                valueTwo = 12;
+                break;
+            case "King":
+                valueTwo = 13;
+                break;
+            case "Ace":
+                valueTwo = 14;
+                break;
+        }
+        if(valueOne > valueTwo) {
+            return 1;
+        }
+        if(valueOne < valueTwo) {
+            return -1;
+        }
+        return 0;
     }
 }

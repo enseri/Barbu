@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Player extends Object{
     public ArrayList<Card> cards = new ArrayList<>();
+    public ArrayList<ArrayList<Card>> plis = new ArrayList<>();
     String name;
     String position;
 
