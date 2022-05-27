@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Player extends Object{
     public ArrayList<Card> cards = new ArrayList<>();
     public ArrayList<ArrayList<Card>> plis = new ArrayList<>();
+    public int score = 0;
     String name;
     String position;
 
@@ -36,5 +37,9 @@ public class Player extends Object{
     public void editData(int[] edits) {
         // TODO Auto-generated method stub
         
+    }
+
+    public void updateScore(int change) {
+        score += change;
     }
 }

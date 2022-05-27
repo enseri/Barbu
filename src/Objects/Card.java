@@ -120,6 +120,70 @@ public class Card extends Object {
                 excluded.add(deck[randNum]);
             }
         }
+        for(int a = 0; a < 13; a++) {
+            for (int b = 0; b < 13; b++) {
+                if (getCardRank(arr1.get(a)) < getCardRank(arr1.get(b))) {
+                    arr1.add(b, arr1.get(a));
+                    if(a - b > 0)
+                        arr1.remove(a + 1);
+                    else
+                        arr1.remove(a);
+                }
+                if (getCardRank(arr2.get(a)) < getCardRank(arr2.get(b))) {
+                    arr2.add(b, arr2.get(a));
+                    if(a - b > 0)
+                        arr2.remove(a + 1);
+                    else
+                        arr2.remove(a);
+                }
+                if (getCardRank(arr3.get(a)) < getCardRank(arr3.get(b))) {
+                    arr3.add(b, arr3.get(a));
+                    if(a - b > 0)
+                        arr3.remove(a + 1);
+                    else
+                        arr3.remove(a);
+                }
+                if (getCardRank(arr4.get(a)) < getCardRank(arr4.get(b))) {
+                    arr4.add(b, arr4.get(a));
+                    if(a - b > 0)
+                        arr4.remove(a + 1);
+                    else
+                        arr4.remove(a);
+                }
+            }
+        }
+        for (int a = 0; a < 13; a++) {
+            for (int b = 0; b < 13; b++) {
+                if (getCardValue(arr1.get(a)) > getCardValue(arr1.get(b)) && arr1.get(b).getToString()[1].equals(arr1.get(a).getToString()[1])) {
+                    arr1.add(b, arr1.get(a));
+                    if(a - b > 0)
+                        arr1.remove(a + 1);
+                    else
+                        arr1.remove(a);
+                }
+                if (getCardValue(arr2.get(a)) > getCardValue(arr2.get(b)) && arr2.get(b).getToString()[1].equals(arr2.get(a).getToString()[1])) {
+                    arr2.add(b, arr2.get(a));
+                    if(a - b > 0)
+                        arr2.remove(a + 1);
+                    else
+                        arr2.remove(a);
+                }
+                if (getCardValue(arr3.get(a)) > getCardValue(arr3.get(b)) && arr3.get(b).getToString()[1].equals(arr3.get(a).getToString()[1])) {
+                    arr3.add(b, arr3.get(a));
+                    if(a - b > 0)
+                        arr3.remove(a + 1);
+                    else
+                        arr3.remove(a);
+                }
+                if (getCardValue(arr4.get(a)) > getCardValue(arr4.get(b)) && arr4.get(b).getToString()[1].equals(arr4.get(a).getToString()[1])) {
+                    arr4.add(b, arr4.get(a));
+                    if(a - b > 0)
+                        arr4.remove(a + 1);
+                    else
+                        arr4.remove(a);
+                }
+            }
+        }
         return new ArrayList<ArrayList<Card>>(Arrays.asList(arr1, arr2, arr3, arr4));
     }
 
@@ -133,5 +197,64 @@ public class Card extends Object {
             width = edits[2];
         if (edits[3] != -1)
             height = edits[3];
+    }
+
+    private static int getCardValue(Card card) {
+        switch (card.getToString()[2]) {
+            case "Two":
+                return 2;
+
+            case "Three":
+                return 3;
+
+            case "Four":
+                return 4;
+
+            case "Five":
+                return 5;
+
+            case "Six":
+                return 6;
+
+            case "Seven":
+                return 7;
+
+            case "Eight":
+                return 8;
+
+            case "Nine":
+                return 9;
+
+            case "Ten":
+                return 10;
+
+            case "Jack":
+                return 11;
+
+            case "Queen":
+                return 12;
+
+            case "King":
+                return 13;
+
+            case "Ace":
+                return 14;
+
+        }
+        return -1;
+    }
+
+    public static int getCardRank(Card card) {
+        switch(card.getToString()[1]) {
+            case "Heart":
+                return 1;
+            case "Diamond":
+                return 2;
+            case "Spade":
+                return 3;
+            case "Clover":
+                return 4;
+        }
+        return -1;
     }
 }

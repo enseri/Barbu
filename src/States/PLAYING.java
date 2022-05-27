@@ -172,7 +172,7 @@ public class PLAYING extends States {
                 Game.drawCenteredString(g, "Show Cards", 0, 450, 100, 50, new Font(Font.SERIF, 15, 15));
                 break;
             case 4:
-            Game.drawCenteredString(g, players[currentPlayer].getToString()[1] + "'s Turn", 200, 0, 100, 20,
+                Game.drawCenteredString(g, players[currentPlayer].getToString()[1] + "'s Turn", 200, 0, 100, 20,
                         new Font(Font.SERIF, 25, 25));
                 if (!whiteScreen && !showPlis) {
                     g.setColor(Color.black);
@@ -204,7 +204,8 @@ public class PLAYING extends States {
                 if (showPlis) {
                     for (int i = 0; i < players[currentPlayer].plis.size(); i++) {
                         g.setColor(Color.pink);
-                        g.drawRect(((i % 4) * 125), ((int) (i / 4) * 150), 1, 150);
+                        g.fillRect(((i % 4) * 125) - 5, ((int) (i / 4) * 150), 5, 150);
+                        g.fillRect(((i % 4) * 125) - 5, ((int) (i / 4) * 150) - 5, 105, 5);
                         ArrayList<Card> plis = players[currentPlayer].plis.get(i);
                         for (int a = 0; a < plis.size(); a++) {
                             g.drawImage(
@@ -218,6 +219,9 @@ public class PLAYING extends States {
                     g.setColor(Color.red);
                     Game.drawCenteredString(g, "Show Plis", 400, 0, 100, 50, new Font(Font.SERIF, 20, 20));
                 }
+                break;
+            case 5:
+                
                 break;
         }
     }
@@ -328,7 +332,8 @@ public class PLAYING extends States {
                                         && Card.plis.get(0).getToString()[1].equals(Card.plis.get(i).getToString()[1]))
                                     highest = Card.plis.get(i);
                             }
-                            players[(currentPlayer + Card.plis.indexOf(highest) + 1) % 4].plis.add((ArrayList<Card>)Card.plis.clone());
+                            players[(currentPlayer + Card.plis.indexOf(highest) + 1) % 4].plis
+                                    .add((ArrayList<Card>) Card.plis.clone());
                             currentPlayer = (currentPlayer + Card.plis.indexOf(highest)) % 4;
                             Card.plis.clear();
                             if (!whiteScreen) {
@@ -349,19 +354,88 @@ public class PLAYING extends States {
                             } else {
                                 whiteScreen = false;
                             }
+                            if (players[currentPlayer].cards.size() == 0) {
+                                switch (rule) {
+                                    case "Pas De Barbu":
+                                        for (int i = 0; i < players.length; i++) {
+                                            for (int a = 0; a < players[i].plis.size(); a++) {
+                                                for (int b = 0; b < players[i].plis.get(a).size(); b++) {
+                                                    if ((players[i].plis.get(a).get(b).getToString()[1]
+                                                            + players[i].plis.get(a).get(b).getToString()[2])
+                                                            .equals("HeartKing"))
+                                                        players[i].updateScore(-80);
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case "Pas De Plis":
+                                        for (int i = 0; i < players.length; i++) {
+                                            for (int a = 0; a < players[i].plis.size(); a++) {
+                                                players[i].updateScore(-40);
+                                            }
+                                        }
+                                        break;
+                                    case "Pas De Reine":
+                                        for (int i = 0; i < players.length; i++) {
+                                            for (int a = 0; a < players[i].plis.size(); a++) {
+                                                for (int b = 0; b < players[i].plis.get(a).size(); b++) {
+                                                    if ((players[i].plis.get(a).get(b).getToString()[2])
+                                                            .equals("Queen"))
+                                                        players[i].updateScore(-20);
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case "Pas De Coeur":
+                                        for (int i = 0; i < players.length; i++) {
+                                            for (int a = 0; a < players[i].plis.size(); a++) {
+                                                for (int b = 0; b < players[i].plis.get(b).size(); b++) {
+                                                    if ((players[i].plis.get(a).get(b).getToString()[1])
+                                                            .equals("Heart"))
+                                                        players[i].updateScore(-10);
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case "Ratatouille":
+                                        for (int i = 0; i < players.length; i++) {
+                                            for (int a = 0; a < players[i].plis.size(); a++) {
+                                                for (int b = 0; b < players[i].plis.get(a).size(); b++) {
+                                                    if ((players[i].plis.get(a).get(b).getToString()[1]
+                                                            + players[i].plis.get(a).get(b).getToString()[2])
+                                                            .equals("HeartKing"))
+                                                        players[i].updateScore(-80);
+                                                }
+                                            }
+                                        }
+                                        for (int i = 0; i < players.length; i++) {
+                                            for (int a = 0; a < players[i].plis.size(); a++) {
+                                                players[i].updateScore(-40);
+                                            }
+                                        }
+                                        for (int i = 0; i < players.length; i++) {
+                                            for (int a = 0; a < players[i].plis.size(); a++) {
+                                                for (int b = 0; b < players[i].plis.get(a).size(); b++) {
+                                                    if ((players[i].plis.get(a).get(b).getToString()[2])
+                                                            .equals("Queen"))
+                                                        players[i].updateScore(-20);
+                                                }
+                                            }
+                                        }
+                                        for (int i = 0; i < players.length; i++) {
+                                            for (int a = 0; a < players[i].plis.size(); a++) {
+                                                for (int b = 0; b < players[i].plis.get(a).size(); b++) {
+                                                    if ((players[i].plis.get(a).get(b).getToString()[1])
+                                                            .equals("Heart"))
+                                                        players[i].updateScore(-10);
+                                                }
+                                            }
+                                        }
+                                        break;
+                                }
+                                mode++;
+                            }
                         }
-                        // switch(rule) {
-                        // case "Pas De Barbu":
-                        // break;
-                        // case "Pas De Plis":
-                        // break;
-                        // case "Pas De Reine":
-                        // break;
-                        // case "Pas De Coeur":
-                        // break;
-                        // case "Ratatouille":
-                        // break;
-                        // }
                         break;
                 }
                 break;
