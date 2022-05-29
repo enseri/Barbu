@@ -50,7 +50,7 @@ public class Distribute extends Animation {
             switch (direction) {
                 case 0:
                     g.drawImage(new ImageIcon("src/Images/back.png").getImage(), x, y - movements, 100, 150, null);
-                    movements += 5;
+                    movements += 10;
                     if (movements == 200) {
                         drawnCards++;
                         movements = 0;
@@ -60,7 +60,7 @@ public class Distribute extends Animation {
                     break;
                 case 1:
                     g.drawImage(new ImageIcon("src/Images/back.png").getImage(), x + movements, y, 100, 150, null);
-                    movements += 5;
+                    movements += 10;
                     if (movements == 200) {
                         drawnCards++;
                         movements = 0;
@@ -70,7 +70,7 @@ public class Distribute extends Animation {
                     break;
                 case 2:
                     g.drawImage(new ImageIcon("src/Images/back.png").getImage(), x, y + movements, 100, 150, null);
-                    movements += 5;
+                    movements += 10;
                     if (movements == 200) {
                         drawnCards++;
                         movements = 0;
@@ -80,7 +80,7 @@ public class Distribute extends Animation {
                     break;
                 case 3:
                     g.drawImage(new ImageIcon("src/Images/back.png").getImage(), x - movements, y, 100, 150, null);
-                    movements += 5;
+                    movements += 10;
                     if (movements == 200) {
                         drawnCards++;
                         movements = 0;

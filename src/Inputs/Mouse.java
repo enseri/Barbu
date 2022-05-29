@@ -1,6 +1,5 @@
 package Inputs;
 import States.*;
-import Objects.*;
 import Objects.Object;
 
 import java.awt.event.*;
@@ -11,6 +10,31 @@ public class Mouse implements MouseInputListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+        System.out.println(e.getX() + " " + e.getY());
         ArrayList<Object> tempObjects = State.currentState.getObjects();
         for(int i = 0; i < tempObjects.size(); i++) {
             boolean xIntercept = false, yIntercept = false;
@@ -31,39 +55,13 @@ public class Mouse implements MouseInputListener{
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
     public void mouseDragged(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         // TODO Auto-generated method stub
-        
     }
     
 }

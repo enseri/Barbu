@@ -13,21 +13,21 @@ import java.awt.*;
 public class Game extends JPanel {
     Keyboard keyboard;
     Mouse mouse;
-    public Start start;
-    public Game(Start start) {
-        this.start = start;
+
+    public Game() {
         keyboard = new Keyboard();
         mouse = new Mouse();
         init();
     }
 
     public void init() {
-        new Threads(this).start();
+        addMouseListener(mouse);
+        addKeyListener(keyboard);
         setBackground(Color.white);
         setFocusable(true);
         setPreferredSize(new Dimension(500, 500));
-        requestFocus();
-        repaint();
+        setVisible(true);
+        new Threads(this).start();
     }
 
     @Override
@@ -63,11 +63,6 @@ class Threads extends Thread {
             if (System.currentTimeMillis() - lastFrame >= timePerFrame) {
                 lastFrame = System.currentTimeMillis();
                 game.repaint();
-                if(game.getHeight() != 500 || game.getWidth() != 500) {
-                    System.out.println(game.getHeight() + " " + game.getWidth()
-                    );
-                    game.start.pack();
-                }
             }
         }
     }
