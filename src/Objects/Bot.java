@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Bot extends Object{
     public ArrayList<Card> cards = new ArrayList<>();
+    public ArrayList<ArrayList<Card>> plis = new ArrayList<>();
+    public int score = 0;
     String position;
 
     public Bot(ArrayList<Card> cards, String position) {

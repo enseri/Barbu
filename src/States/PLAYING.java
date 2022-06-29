@@ -20,7 +20,7 @@ public class PLAYING extends States {
     private ArrayList<Object> objects = new ArrayList<>();
     private Player[] players = new Player[4];
     private Bot[] bots = new Bot[0];
-    private int mode = 0, currentPlayer = 0;
+    private int mode = 0, currentPlayer = 0, starter = 0;
     private Distribute distribute = new Distribute();
     private boolean showCards = false, showPlis = false, hasPlayed = false, whiteScreen = false;
     private String rule = "Pas De Barbu";
@@ -56,10 +56,14 @@ public class PLAYING extends States {
                     ArrayList<ArrayList<Card>> assortedList = Card.genRandCards();
                     for (int i = 0; i < 4; i++) {
                         for (int a = 1; a <= 4; a++) {
-                            if (players.length > i && players[i].getToString()[2].equals(a + ""))
+                            if (players.length > i && players[i].getToString()[2].equals(a + "")) {
+                                players[i].plis.clear();
                                 players[i].cards = assortedList.get(a - 1);
-                            if (bots.length > i && players[i].getToString()[1].equals(a + ""))
+                            }
+                            if (bots.length > i && players[i].getToString()[1].equals(a + "")) {
+                                bots[i].plis.clear();
                                 bots[i].cards = assortedList.get(a - 1);
+                            }
                         }
                     }
                     break;
@@ -148,6 +152,7 @@ public class PLAYING extends States {
                     int[] data = objects.get(i).getData();
                     g.setColor(Color.red);
                     g.fillRect(data[0], data[1], data[2], data[3]);
+                    g.drawImage(new ImageIcon("src/Images/" + objects.get(i).getToString()[1] + ".png").getImage(), data[0], data[1], data[2], data[3], null);
                     if (objects.get(i) == selectedObject || objects.get(i).getToString()[1].equals(rule)) {
                         rule = objects.get(i).getToString()[1];
                         g.setColor(Color.green);
@@ -221,7 +226,25 @@ public class PLAYING extends States {
                 }
                 break;
             case 5:
-                
+                g.setColor(Color.gray);
+                g.fillRect(50, 0, 400, 500);
+                g.setColor(Color.red);
+                for(Player temp : players) {
+                    g.setColor(Color.red);
+                    g.fillRect(50 , 50 + (100 * (strToNum(temp.getToString()[2]) - 1)), 400, 50);
+                    g.setColor(Color.black);
+                    Game.drawCenteredString(g,temp.getToString()[1] + ":                                                     " + temp.score, 50, 50 + (100 * (strToNum(temp.getToString()[2]) - 1)), 400, 50, new Font(Font.SERIF, 20, 20));
+                }
+                for(Bot temp : bots) {
+                    g.setColor(Color.red);
+                    g.fillRect(50 , 50 + (100 * (strToNum(temp.getToString()[1]) - 1)), 400, 50);
+                    g.setColor(Color.black);
+                    Game.drawCenteredString(g, "Bot " + temp.getToString()[1] + ":                                                     " + temp.score, 50, 50 + (100 * (strToNum(temp.getToString()[1]) - 1)), 400, 50, new Font(Font.SERIF, 20, 20));
+                }
+                g.setColor(Color.black);
+                g.fillRect(450, 450, 50, 50);
+                g.setColor(Color.red);
+                Game.drawCenteredString(g, "NEXT", 450, 450, 50, 50, new Font(Font.SERIF, 10, 10));
                 break;
         }
     }
@@ -244,7 +267,7 @@ public class PLAYING extends States {
                     case "Button":
                         switch (object.getToString()[1]) {
                             case "NEXT":
-                                if (!showCards && mode != 4) {
+                                if (!showCards && mode != 4 && mode != 5) {
                                     mode++;
                                     selectedObject = null;
                                     objects.clear();
@@ -267,6 +290,14 @@ public class PLAYING extends States {
                                     } else {
                                         whiteScreen = false;
                                     }
+                                } else if(mode == 5) {
+                                    if(starter < 3)
+                                        starter++;
+                                    else
+                                        starter = 1;
+                                    currentPlayer = starter;
+                                    objects.clear();
+                                    mode = 2;
                                 }
                                 break;
                             case "Show Cards":
@@ -325,6 +356,12 @@ public class PLAYING extends States {
                             }
                         }
                         if (Card.plis.size() == 4) {
+                            boolean containsBarbu = false;
+                            if(rule.equals("Pas De Barbu")) {
+                                for (Card temp : Card.plis)
+                                    if ((temp.getToString()[1] + temp.getToString()[2]).equals("HeartKing"))
+                                        containsBarbu = true;
+                            }
                             hasPlayed = false;
                             Card highest = Card.plis.get(0);
                             for (int i = 0; i < 4; i++) {
@@ -336,25 +373,27 @@ public class PLAYING extends States {
                                     .add((ArrayList<Card>) Card.plis.clone());
                             currentPlayer = (currentPlayer + Card.plis.indexOf(highest)) % 4;
                             Card.plis.clear();
-                            if (!whiteScreen) {
-                                whiteScreen = true;
-                                hasPlayed = false;
-                                if (currentPlayer < players.length - 1)
-                                    currentPlayer++;
-                                else
-                                    currentPlayer = 0;
-                                objects.clear();
-                                objects.add(new Button("Show Plis", 400, 0, 100, 50));
-                                objects.add(new Button("NEXT", 0, 0, 50, 50));
-                                for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
-                                    players[currentPlayer].cards.get(i)
-                                            .editData(new int[] { 0 + (38 * i), 350, 38, 150 });
-                                    objects.add(players[currentPlayer].cards.get(i));
+                            if(!containsBarbu) {
+                                if (!whiteScreen) {
+                                    whiteScreen = true;
+                                    hasPlayed = false;
+                                    if (currentPlayer < players.length - 1)
+                                        currentPlayer++;
+                                    else
+                                        currentPlayer = 0;
+                                    objects.clear();
+                                    objects.add(new Button("Show Plis", 400, 0, 100, 50));
+                                    objects.add(new Button("NEXT", 0, 0, 50, 50));
+                                    for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
+                                        players[currentPlayer].cards.get(i)
+                                                .editData(new int[]{0 + (38 * i), 350, 38, 150});
+                                        objects.add(players[currentPlayer].cards.get(i));
+                                    }
+                                } else {
+                                    whiteScreen = false;
                                 }
-                            } else {
-                                whiteScreen = false;
                             }
-                            if (players[currentPlayer].cards.size() == 0) {
+                            if (players[currentPlayer].cards.size() == 0 || containsBarbu) {
                                 switch (rule) {
                                     case "Pas De Barbu":
                                         for (int i = 0; i < players.length; i++) {
@@ -433,6 +472,8 @@ public class PLAYING extends States {
                                         }
                                         break;
                                 }
+                                whiteScreen = false;
+                                objects.clear();
                                 mode++;
                             }
                         }
