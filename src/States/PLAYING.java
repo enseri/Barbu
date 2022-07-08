@@ -294,7 +294,7 @@ public class PLAYING extends States {
                                     if(starter < 3)
                                         starter++;
                                     else
-                                        starter = 1;
+                                        starter = 0;
                                     currentPlayer = starter;
                                     objects.clear();
                                     mode = 2;
