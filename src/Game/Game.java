@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.*;
 
 public class Game extends JPanel {
+    public static int connection = 0;
     Keyboard keyboard;
     Mouse mouse;
     Bot bot = new Bot(null, "1");
@@ -38,30 +39,6 @@ public class Game extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         doDrawing(g);
-        for(int a = 0; a < bot.brainConnections.size(); a++) {
-            for(int b = 0; b < bot.brainConnections.get(a).size(); b++) {
-                for (int c = 0; c < bot.brainConnections.get(a).get(b).size(); c++) {
-                    switch(b) {
-                        case 0:
-                            g.setColor(Color.green);
-                            break;
-                        case 1:
-                            g.setColor(Color.yellow);
-                            break;
-                        case 2:
-                            g.setColor(Color.orange);
-                            break;
-                        case 3:
-                            g.setColor(Color.red);
-                            break;
-                    }
-                    g.fillOval(0 + (a * 100) + (c * 15), 0 + (b * 25), 15, 15);
-                    g.setFont(new Font(Font.SERIF, 10, 10));
-                    g.setColor(Color.black);
-                    g.drawString(bot.brainConnections.get(a).get(b).get(c) + "",0 + (a * 100) + (c * 15) + 7, 0 + (b * 25) + 7);
-                }
-            }
-        }
     }
 
     public void doDrawing(Graphics g) {

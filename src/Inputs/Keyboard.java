@@ -1,6 +1,6 @@
 package Inputs;
 import java.awt.event.*;
-
+import Game.Game;
 import States.State;
 public class Keyboard implements KeyListener{
     public static String lastKeyStr;
@@ -12,6 +12,8 @@ public class Keyboard implements KeyListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
+        if((e.getKeyChar() + "").equals("l"))
+            Game.connection++;
         lastKeyNum = e.getKeyCode();
         lastKeyStr = e.getKeyChar() + "";
         State.currentState.interactionWithObject(null, "typed");

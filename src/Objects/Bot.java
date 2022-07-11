@@ -4,7 +4,9 @@ import java.sql.Array;
 import java.util.ArrayList;
 
 public class Bot extends Object{
-    public ArrayList<ArrayList<ArrayList<Integer>>> brainConnections = new ArrayList<>();
+    public ArrayList<Integer> ends = new ArrayList<>();
+    public ArrayList<int[]> IToC = new ArrayList<>();
+    public ArrayList<int[]> CToO = new ArrayList<>();
     public ArrayList<Card> cards = new ArrayList<>();
     public ArrayList<ArrayList<Card>> plis = new ArrayList<>();
     public int score = 0;
@@ -34,31 +36,46 @@ public class Bot extends Object{
     @Override
     public void editData(int[] edits) {
         // TODO Auto-generated method stub
-        
     }
 
     public void generateBrain() {
-        /*
-        * 0 Input
-        * 1 Impulse Per Data
-        * 2 Move
-        * 3 Impulse Required
-         */
-        while((int) (Math.random() * 50) != 0) {
-            brainConnections.add(new ArrayList<>());
-            int index = brainConnections.size() - 1;
-            brainConnections.get(index).add(new ArrayList<>());
-            brainConnections.get(index).add(new ArrayList<>());
-            brainConnections.get(index).add(new ArrayList<>());
-            brainConnections.get(index).add(new ArrayList<>());
-            while((int) (Math.random() * 10) != 0) {
-                brainConnections.get(index).get(0).add((int) (Math.random() * 32));
-                brainConnections.get(index).get(1).add((int) (Math.random() * 10) + 1);
-            }
-            while((int) (Math.random() * 10) != 0) {
-                brainConnections.get(index).get(2).add((int) (Math.random() * 13));
-                brainConnections.get(index).get(3).add((int) (Math.random() * 8) + 1);
-            }
+        //50
+       int[] inputNodes = new int[(int) (Math.random() * 200) + 50];
+       double[] combNodes = new double[(int) (Math.random() * 100) + 32];
+       int[] outputNodes = new int[(int) (Math.random() * 200) + 50];
+       int IPBN = inputNodes.length / 32, CPBN = combNodes.length / 32, OPBN = outputNodes.length / 32;
+       for(int i = 0; i < inputNodes.length; i++) {
+           inputNodes[i] = (int) (Math.random() * 137) + 1;
+       }
+        for(int i = 0; i < combNodes.length; i++) {
+            combNodes[i] = (Math.random() * 2) + 1;
         }
+        for(int i = 0; i < outputNodes.length; i++) {
+            outputNodes[i] = (int) (Math.random() * 13) + 1;
+        }
+        int inputIndex = 0, combIndex = 0, outputIndex = 0;
+       for(int i = 0; i < 32; i++) {
+           int tempIndex = 0;
+           for(int b = 0; b < CPBN; b++) {
+               tempIndex = inputIndex;
+               for (int a = 0; a < IPBN; a++) {
+                   IToC.add(new int[]{tempIndex, combIndex});
+                   tempIndex++;
+               }
+               combIndex++;
+           }
+           ends.add(tempIndex);
+           inputIndex = tempIndex;
+           tempIndex = 0;
+           for(int b = 0; b < OPBN; b++) {
+               tempIndex = combIndex;
+               for (int a = 0; a < CPBN; a++) {
+                   CToO.add(new int[]{tempIndex, outputIndex});
+                   tempIndex++;
+               }
+               outputIndex++;
+           }
+           outputIndex = tempIndex;
+       }
     }
 }
