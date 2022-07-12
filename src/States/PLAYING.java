@@ -54,13 +54,15 @@ public class PLAYING extends States {
                     break;
                 case 2:
                     ArrayList<ArrayList<Card>> assortedList = Card.genRandCards();
-                    for (int i = 0; i < 4; i++) {
-                        for (int a = 1; a <= 4; a++) {
-                            if (players.length > i && players[i].getToString()[2].equals(a + "")) {
+                    for (int a = 1; a <= 4; a++) {
+                        for (int i = 0; i < players.length; i++) {
+                            if (players[i].getToString()[2].equals(a + "")) {
                                 players[i].plis.clear();
                                 players[i].cards = assortedList.get(a - 1);
                             }
-                            if (bots.length > i && players[i].getToString()[1].equals(a + "")) {
+                        }
+                        for (int i = 0; i < bots.length; i++) {
+                            if (players[i].getToString()[1].equals(a + "")) {
                                 bots[i].plis.clear();
                                 bots[i].cards = assortedList.get(a - 1);
                             }
@@ -152,7 +154,8 @@ public class PLAYING extends States {
                     int[] data = objects.get(i).getData();
                     g.setColor(Color.red);
                     g.fillRect(data[0], data[1], data[2], data[3]);
-                    g.drawImage(new ImageIcon("src/Images/" + objects.get(i).getToString()[1] + ".png").getImage(), data[0], data[1], data[2], data[3], null);
+                    g.drawImage(new ImageIcon("src/Images/" + objects.get(i).getToString()[1] + ".png").getImage(),
+                            data[0], data[1], data[2], data[3], null);
                     if (objects.get(i) == selectedObject || objects.get(i).getToString()[1].equals(rule)) {
                         rule = objects.get(i).getToString()[1];
                         g.setColor(Color.green);
@@ -229,17 +232,25 @@ public class PLAYING extends States {
                 g.setColor(Color.gray);
                 g.fillRect(50, 0, 400, 500);
                 g.setColor(Color.red);
-                for(Player temp : players) {
+                for (Player temp : players) {
                     g.setColor(Color.red);
-                    g.fillRect(50 , 50 + (100 * (strToNum(temp.getToString()[2]) - 1)), 400, 50);
+                    g.fillRect(50, 50 + (100 * (strToNum(temp.getToString()[2]) - 1)), 400, 50);
                     g.setColor(Color.black);
-                    Game.drawCenteredString(g,temp.getToString()[1] + ":                                                     " + temp.score, 50, 50 + (100 * (strToNum(temp.getToString()[2]) - 1)), 400, 50, new Font(Font.SERIF, 20, 20));
+                    Game.drawCenteredString(g,
+                            temp.getToString()[1] + ":                                                     "
+                                    + temp.score,
+                            50, 50 + (100 * (strToNum(temp.getToString()[2]) - 1)), 400, 50,
+                            new Font(Font.SERIF, 20, 20));
                 }
-                for(Bot temp : bots) {
+                for (Bot temp : bots) {
                     g.setColor(Color.red);
-                    g.fillRect(50 , 50 + (100 * (strToNum(temp.getToString()[1]) - 1)), 400, 50);
+                    g.fillRect(50, 50 + (100 * (strToNum(temp.getToString()[1]) - 1)), 400, 50);
                     g.setColor(Color.black);
-                    Game.drawCenteredString(g, "Bot " + temp.getToString()[1] + ":                                                     " + temp.score, 50, 50 + (100 * (strToNum(temp.getToString()[1]) - 1)), 400, 50, new Font(Font.SERIF, 20, 20));
+                    Game.drawCenteredString(g,
+                            "Bot " + temp.getToString()[1] + ":                                                     "
+                                    + temp.score,
+                            50, 50 + (100 * (strToNum(temp.getToString()[1]) - 1)), 400, 50,
+                            new Font(Font.SERIF, 20, 20));
                 }
                 g.setColor(Color.black);
                 g.fillRect(450, 450, 50, 50);
@@ -258,6 +269,7 @@ public class PLAYING extends States {
     }
 
     public void interactionWithObject(Object object, String action) {
+        System.out.println(mode);
         if (object != null && object.getToString().length > 1)
             System.out.println(object.getToString()[1]);
         switch (action) {
@@ -290,8 +302,8 @@ public class PLAYING extends States {
                                     } else {
                                         whiteScreen = false;
                                     }
-                                } else if(mode == 5) {
-                                    if(starter < 3)
+                                } else if (mode == 5) {
+                                    if (starter < 3)
                                         starter++;
                                     else
                                         starter = 0;
@@ -357,7 +369,7 @@ public class PLAYING extends States {
                         }
                         if (Card.plis.size() == 4) {
                             boolean containsBarbu = false;
-                            if(rule.equals("Pas De Barbu")) {
+                            if (rule.equals("Pas De Barbu")) {
                                 for (Card temp : Card.plis)
                                     if ((temp.getToString()[1] + temp.getToString()[2]).equals("HeartKing"))
                                         containsBarbu = true;
@@ -373,7 +385,7 @@ public class PLAYING extends States {
                                     .add((ArrayList<Card>) Card.plis.clone());
                             currentPlayer = (currentPlayer + Card.plis.indexOf(highest)) % 4;
                             Card.plis.clear();
-                            if(!containsBarbu) {
+                            if (!containsBarbu) {
                                 if (!whiteScreen) {
                                     whiteScreen = true;
                                     hasPlayed = false;
@@ -386,7 +398,7 @@ public class PLAYING extends States {
                                     objects.add(new Button("NEXT", 0, 0, 50, 50));
                                     for (int i = 0; i < players[currentPlayer].cards.size(); i++) {
                                         players[currentPlayer].cards.get(i)
-                                                .editData(new int[]{0 + (38 * i), 350, 38, 150});
+                                                .editData(new int[] { 0 + (38 * i), 350, 38, 150 });
                                         objects.add(players[currentPlayer].cards.get(i));
                                     }
                                 } else {

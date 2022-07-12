@@ -38,8 +38,11 @@ public class Bot extends Object{
         // TODO Auto-generated method stub
     }
 
+    public int play() {
+        return 0;
+    }
+
     public void generateBrain() {
-        //50
        int[] inputNodes = new int[(int) (Math.random() * 200) + 50];
        double[] combNodes = new double[(int) (Math.random() * 100) + 32];
        int[] outputNodes = new int[(int) (Math.random() * 200) + 50];
@@ -59,7 +62,7 @@ public class Bot extends Object{
            for(int b = 0; b < CPBN; b++) {
                tempIndex = inputIndex;
                for (int a = 0; a < IPBN; a++) {
-                   IToC.add(new int[]{tempIndex, combIndex});
+                   IToC.add(new int[]{tempIndex, (int) (Math.random() * 10) + 1,combIndex});
                    tempIndex++;
                }
                combIndex++;
@@ -70,7 +73,7 @@ public class Bot extends Object{
            for(int b = 0; b < OPBN; b++) {
                tempIndex = combIndex;
                for (int a = 0; a < CPBN; a++) {
-                   CToO.add(new int[]{tempIndex, outputIndex});
+                   CToO.add(new int[]{tempIndex, (int) (Math.random() * 10) + 1 ,outputIndex});
                    tempIndex++;
                }
                outputIndex++;
