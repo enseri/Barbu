@@ -12,11 +12,9 @@ public class Keyboard implements KeyListener{
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if((e.getKeyChar() + "").equals("l"))
-            Game.connection++;
-        lastKeyNum = e.getKeyCode();
-        lastKeyStr = e.getKeyChar() + "";
-        State.currentState.interactionWithObject(null, "typed");
+        lastKeyNum = e.getKeyCode();// Save Key Variables
+        lastKeyStr = e.getKeyChar() + "";// Save Key Variables
+        State.currentState.interactionWithObject(null, "typed"); // For Current State Send Data
     }
 
     @Override

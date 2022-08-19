@@ -14,7 +14,7 @@ public class Distribute extends Animation {
     @Override
     public void animate(Graphics g) {
         int num0 = 0, num1 = 0, num2 = 0, num3 = 0;
-        for (int i = 0; i < toDraw.size(); i++) {
+        for (int i = 0; i < toDraw.size(); i++) { // Go Through All Cards That Have Been Assigned
             switch (toDraw.get(i)) {
                 case 0:
                     g.drawImage(new ImageIcon("src/Images/back.png").getImage(), 200, 0 - num0, 100, 150, null);
@@ -34,28 +34,28 @@ public class Distribute extends Animation {
                     break;
             }
         }
-        for (int i = 0; i < 51 - drawnCards; i++) {
+        for (int i = 0; i < 51 - drawnCards; i++) { // Show Cards That Havent Been Moved Or Distributed
             g.drawImage(new ImageIcon("src/Images/back.png").getImage(), x, y - i, 100, 150, null);
         }
         Game.drawCenteredString(g, num0 + "", 200, 150, 100, 20, new Font(Font.SANS_SERIF, 20, 20));
         Game.drawCenteredString(g, num1 + "", 380, 175, 20, 150, new Font(Font.SANS_SERIF, 20, 20));
         Game.drawCenteredString(g, num2 + "", 200, 330, 100, 20, new Font(Font.SANS_SERIF, 20, 20));
         Game.drawCenteredString(g, num3 + "", 100, 175, 20, 150, new Font(Font.SANS_SERIF, 20, 20));
-        if (drawnCards < 52) {
+        if (drawnCards < 52) { // Move All Cards Slowly
             try{
                 TimeUnit.MILLISECONDS.sleep(1);
             } catch(InterruptedException e) {
                 System.out.println("Interrupted");
             }
-            switch (direction) {
+            switch (direction) { // Determine Which Deck It Goes To
                 case 0:
                     g.drawImage(new ImageIcon("src/Images/back.png").getImage(), x, y - movements, 100, 150, null);
                     movements += 10;
-                    if (movements == 200) {
+                    if (movements == 200) { // How Many Moves Are Made In Total
                         drawnCards++;
                         movements = 0;
                         direction++;
-                        toDraw.add(0);
+                        toDraw.add(0); // Add To List Of Drawn Cards
                     }
                     break;
                 case 1:

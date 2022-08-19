@@ -199,7 +199,7 @@ public class Card extends Object {
             height = edits[3];
     }
 
-    private static int getCardValue(Card card) {
+    public static int getCardValue(Card card) {
         switch (card.getToString()[2]) {
             case "Two":
                 return 2;

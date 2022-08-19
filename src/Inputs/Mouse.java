@@ -34,9 +34,8 @@ public class Mouse implements MouseInputListener{
     @Override
     public void mouseReleased(MouseEvent e) {
         // TODO Auto-generated method stub
-        System.out.println(e.getX() + " " + e.getY());
         ArrayList<Object> tempObjects = State.currentState.getObjects();
-        for(int i = 0; i < tempObjects.size(); i++) {
+        for(int i = 0; i < tempObjects.size(); i++) { // For Each Object in State Check If Location Matches Click
             boolean xIntercept = false, yIntercept = false;
             int[] data = tempObjects.get(i).getData();
             for(int x = data[0]; x < data[0] + data[2]; x++) {
@@ -48,7 +47,7 @@ public class Mouse implements MouseInputListener{
                     yIntercept = true;
             }
             if(xIntercept && yIntercept) {
-                State.currentState.interactionWithObject(tempObjects.get(i), "clicked");
+                State.currentState.interactionWithObject(tempObjects.get(i), "clicked"); // Send Info To State
                 break;
             }
         }
